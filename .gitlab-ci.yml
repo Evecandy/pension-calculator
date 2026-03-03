@@ -46,6 +46,13 @@ package:
     - mvn package -DskipTests
     - mkdir -p built
     - cp target/*.jar built/
+    - echo "=== JAR created successfully ==="
+    - ls -la built/
+  artifacts:
+    paths:
+      - built/*.jar
+    expire_in: 1 week
+    name: "pension-calculator-$CI_COMMIT_SHORT_SHA"
   only:
     - main
     - develop
@@ -54,12 +61,10 @@ package:
 artifact:
   stage: artifact
   script:
-    - echo "=== Artifact Ready ==="
-  artifacts:
-    paths:
-      - built/*.jar
-    expire_in: 1 week
-    name: "pension-calculator-$CI_COMMIT_SHORT_SHA"
+    - echo "=== Artifact stage complete ==="
+    - ls -la built/
+  dependencies:
+    - package
   only:
     - main
     - develop
