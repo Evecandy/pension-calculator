@@ -1,4 +1,3 @@
-
 image: eclipse-temurin:21-jdk
 
 stages:
@@ -9,15 +8,19 @@ stages:
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_VERSION: "3.9.6"
 
 cache:
   paths:
     - .m2/repository/
 
+before_script:
+  - apt-get update -qq && apt-get install -y maven
+
 build:
   stage: build
   script:
-    - echo "=== Building Pension Calculator ==="
+    - echo "=== Building Systech Pension Calculator ==="
     - mvn compile
   only:
     - main
@@ -51,7 +54,7 @@ package:
 artifact:
   stage: artifact
   script:
-    - echo "=== Storing Artifact ==="
+    - echo "=== Artifact Ready ==="
   artifacts:
     paths:
       - built/*.jar
