@@ -16,15 +16,24 @@ public class App {
              + calculateEmployerContribution(salary);
     }
 
+    public static double calculateAnnualContribution(double salary) {
+    return calculateTotalContribution(salary) * 12;
+}
+
     public static void main(String[] args) {
         double salary = 50000;
         System.out.println("=== Systech Pension Calculator ===");
         System.out.println("Salary: KES " + salary);
-        System.out.println("Employee Contribution: KES " 
+        System.out.println("Employee Contribution:  " 
             + calculateEmployeeContribution(salary));
         System.out.println("Employer Contribution: KES " 
             + calculateEmployerContribution(salary));
-        System.out.println("Total Monthly Contribution: KES " 
+        System.out.println("Monthly Contributions: KES " 
             + calculateTotalContribution(salary));
     }
+
+    
 }
+
+
+
