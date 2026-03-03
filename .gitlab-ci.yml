@@ -1,0 +1,63 @@
+
+image: eclipse-temurin:21-jdk
+
+stages:
+  - build
+  - test
+  - package
+  - artifact
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+
+build:
+  stage: build
+  script:
+    - echo "=== Building Pension Calculator ==="
+    - mvn compile
+  only:
+    - main
+    - develop
+    - /^feature\/.*/
+    - /^release\/.*/
+
+test:
+  stage: test
+  script:
+    - echo "=== Running Unit Tests ==="
+    - mvn test
+  only:
+    - main
+    - develop
+    - /^feature\/.*/
+    - /^release\/.*/
+
+package:
+  stage: package
+  script:
+    - echo "=== Packaging JAR ==="
+    - mvn package -DskipTests
+    - mkdir -p built
+    - cp target/*.jar built/
+  only:
+    - main
+    - develop
+    - /^release\/.*/
+
+artifact:
+  stage: artifact
+  script:
+    - echo "=== Storing Artifact ==="
+  artifacts:
+    paths:
+      - built/*.jar
+    expire_in: 1 week
+    name: "pension-calculator-$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - develop
+    - /^release\/.*/
