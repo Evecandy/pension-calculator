@@ -29,6 +29,25 @@ pipeline {
                 '''
             }
         }
+
+stage('Build Docker Image') {
+    steps {
+        sh 'docker build -t your-dockerhub-evecandy3/pension-calculator:latest .'
+    }
+}
+
+stage('Push to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-credentials',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+            sh 'docker push your-dockerhub-evecandy3/pension-calculator:latest'
+        }
+    }
+}
     }
     post {
         success {
