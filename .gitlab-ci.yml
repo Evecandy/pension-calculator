@@ -1,0 +1,71 @@
+image: eclipse-temurin:21-jdk
+
+stages:
+  - build
+  - test
+  - package
+  - artifact
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_VERSION: "3.9.6"
+
+cache:
+  paths:
+    - .m2/repository/
+
+before_script:
+  - apt-get update -qq && apt-get install -y maven
+
+build:
+  stage: build
+  script:
+    - echo "=== Building Systech Pension Calculator ==="
+    - mvn compile
+  only:
+    - main
+    - develop
+    - /^feature\/.*/
+    - /^release\/.*/
+
+test:
+  stage: test
+  script:
+    - echo "=== Running Unit Tests ==="
+    - mvn test
+  only:
+    - main
+    - develop
+    - /^feature\/.*/
+    - /^release\/.*/
+
+package:
+  stage: package
+  script:
+    - echo "=== Packaging JAR ==="
+    - mvn package -DskipTests
+    - mkdir -p built
+    - cp target/*.jar built/
+    - echo "=== JAR created successfully ==="
+    - ls -la built/
+  artifacts:
+    paths:
+      - built/*.jar
+    expire_in: 1 week
+    name: "pension-calculator-$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - develop
+    - /^release\/.*/
+
+artifact:
+  stage: artifact
+  script:
+    - echo "=== Artifact stage complete ==="
+    - ls -la built/
+  dependencies:
+    - package
+  only:
+    - main
+    - develop
+    - /^release\/.*/
