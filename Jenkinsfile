@@ -32,7 +32,7 @@ pipeline {
 
 stage('Build Docker Image') {
     steps {
-        sh 'docker build -t your-dockerhub-evecandy3/pension-calculator:latest .'
+        sh "docker build -t evecandy3/pension-calculator:${BUILD_NUMBER} -t evecandy3/pension-calculator:latest ."
     }
 }
 
