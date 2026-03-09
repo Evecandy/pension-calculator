@@ -6,7 +6,7 @@ pipeline {
     environment {
         BUILD_DIR = "built"
         REPO_URL = "https://github.com/Evecandy/pension-calculator.git"
-        BRANCH = "develop"
+        BRANCH = "main"
     }
     stages {
         stage('Checkout Code') {
