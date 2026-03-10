@@ -31,16 +31,16 @@ pipeline {
         }
         stage('Build Docker Image') {
             when {
-                branch 'main'
-            }
+    expression { env.GIT_BRANCH == 'origin/main' }
+}
             steps {
                 sh "docker build -t evecandy3/pension-calculator:${BUILD_NUMBER} -t evecandy3/pension-calculator:latest ."
             }
         }
         stage('Push to Docker Hub') {
             when {
-                branch 'main'
-            }
+    expression { env.GIT_BRANCH == 'origin/main' }
+}
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-credentials',
